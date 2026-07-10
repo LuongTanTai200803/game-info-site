@@ -1,6 +1,4 @@
 import { getAllPosts } from '../../lib/posts';
-import Link from 'next/link';
-import Image from 'next/image';
 import PostList from "../../components/PostList";
 
 

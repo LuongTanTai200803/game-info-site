@@ -1,9 +1,6 @@
 backend:
   name: git-gateway
   branch: main
-  api_url: https://api.netlify.com
-  site_id: https://lambent-wisp-11f514.netlify.app/.netlify/identity
-
 
 media_folder: "public/uploads"
 public_folder: "/uploads"
@@ -14,9 +11,24 @@ collections:
     folder: "content/posts"
     create: true
     slug: "{{slug}}"
+
     fields:
-      - { label: "Tiêu đề", name: "title", widget: "string" }
-      - { label: "Ngày đăng", name: "date", widget: "datetime" }
-      - { label: "Danh mục", name: "category", widget: "string" }
-      - { label: "Ảnh bìa", name: "image", widget: "image" }
-      - { label: "Nội dung", name: "body", widget: "markdown" }
+      - label: "Tiêu đề"
+        name: "title"
+        widget: "string"
+
+      - label: "Ngày đăng"
+        name: "date"
+        widget: "datetime"
+
+      - label: "Danh mục"
+        name: "category"
+        widget: "string"
+
+      - label: "Ảnh bìa"
+        name: "image"
+        widget: "image"
+
+      - label: "Nội dung"
+        name: "body"
+        widget: "markdown"

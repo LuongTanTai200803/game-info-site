@@ -1,6 +1,9 @@
 backend:
   name: git-gateway
   branch: main
+  api_url: https://api.netlify.com
+  site_id: https://lambent-wisp-11f514.netlify.app/.netlify/identity
+
 
 media_folder: "public/uploads"
 public_folder: "/uploads"

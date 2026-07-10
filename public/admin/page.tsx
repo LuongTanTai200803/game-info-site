@@ -3,11 +3,7 @@
 import dynamic from 'next/dynamic';
 
 const CMS = dynamic(
-  () => import('decap-cms-app').then((mod) => {
-    // Import config
-    import('../../public/admin/config.yml');
-    return mod.default;
-  }),
+  () => import('decap-cms-app').then((mod) => mod.default),
   { ssr: false }
 );
 

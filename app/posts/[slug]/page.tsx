@@ -24,9 +24,11 @@ export default async function PostPage({
   return (
     <article className="max-w-4xl mx-auto px-4 py-8">
       <div className="mb-8">
+
         <p className="text-sm text-gray-500">
-          {post.date} • {post.category}
+          {new Date(post.date).toLocaleDateString('vi-VN')} • {post.category}
         </p>
+
         <h1 className="text-4xl font-bold mt-2">{post.title}</h1>
       </div>
 

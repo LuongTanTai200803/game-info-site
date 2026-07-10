@@ -11,72 +11,64 @@ type PostListProps = {
 
 export default function PostList({ posts }: PostListProps) {
   const [keyword, setKeyword] = useState("");
-
   const [selectedCategory, setSelectedCategory] = useState("Tất cả");
 
-   const categories = [
-    "Tất cả",
-    ...new Set(posts.map(post => post.category))
-    ];
+  const categories = useMemo(() => {
+    const uniqueCategories = posts
+      .map((post) => post.category)
+      .filter(Boolean);
 
-  const filteredPostsCategory = useMemo(() => {
-    return posts.filter(post => {
-        const matchTitle =
-        post.title.toLowerCase().includes(keyword.toLowerCase());
-
-        const matchCategory =
-        selectedCategory === "Tất cả" ||
-        post.category === selectedCategory;
-
-        return matchTitle && matchCategory;
-    });
-    }, [posts, keyword, selectedCategory]);
-
+    return ["Tất cả", ...new Set(uniqueCategories)];
+  }, [posts]);
 
   const filteredPosts = useMemo(() => {
     const normalizedKeyword = keyword.trim().toLowerCase();
 
-    if (!normalizedKeyword) {
-      return posts;
-    }
+    return posts.filter((post) => {
+      const matchTitle =
+        !normalizedKeyword ||
+        post.title.toLowerCase().includes(normalizedKeyword);
 
-    return posts.filter((post) =>
-      post.title.toLowerCase().includes(normalizedKeyword)
-    );
-  }, [posts, keyword]);
+      const matchCategory =
+        selectedCategory === "Tất cả" ||
+        post.category === selectedCategory;
+
+      return matchTitle && matchCategory;
+    });
+  }, [posts, keyword, selectedCategory]);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-6">Tất cả bài viết</h1>
 
-        // Search input
-        <div className="max-w-xl mb-8">
+      <div className="w-full mb-6">
+        <div className="w-full max-w-xl">
             <input
-                type="search"
-                placeholder="Tìm bài viết..."
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-                className="w-full border rounded-lg px-4 py-3"
+            type="search"
+            placeholder="Tìm bài viết..."
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            className="block w-full border rounded-lg px-4 py-3"
             />
         </div>
+      </div>
 
-        // Category filter
-        <div className="flex gap-2 flex-wrap mb-6">
-        {categories.map(category => (
-            <button
+      <div className="flex flex-wrap gap-2 mb-8">
+        {categories.map((category) => (
+          <button
             key={category}
+            type="button"
             onClick={() => setSelectedCategory(category)}
-            className={`px-4 py-2 rounded-full ${
-                selectedCategory === category
+            className={`px-4 py-2 rounded-full transition ${
+              selectedCategory === category
                 ? "bg-blue-600 text-white"
-                : "bg-gray-200"
+                : "bg-gray-200 text-gray-800 hover:bg-gray-300"
             }`}
-            >
+          >
             {category}
-            </button>
+          </button>
         ))}
-        </div>
-
+      </div>
 
       {filteredPosts.length === 0 ? (
         <p className="text-gray-500">

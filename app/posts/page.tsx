@@ -27,7 +27,7 @@ export default async function PostsPage() {
             )}
             
             <div className="p-4">
-              <p className="text-sm text-gray-500">{post.date} • {post.category}</p>
+              <p className="text-sm text-gray-500">{new Date(post.date).toLocaleDateString('vi-VN')} • {post.category}</p>
               <h2 className="text-xl font-semibold mt-2 line-clamp-2">{post.title}</h2>
             </div>
           </Link>

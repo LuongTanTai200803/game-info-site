@@ -1,8 +1,8 @@
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
 
-const postsDirectory = path.join(process.cwd(), 'content/posts');
+const postsDirectory = path.join(process.cwd(), "content/posts");
 
 export type Post = {
   slug: string;
@@ -13,39 +13,67 @@ export type Post = {
   content: string;
 };
 
-export function getAllPosts() {
-  const fileNames = fs.readdirSync(postsDirectory);
-  
+function getPostFilePath(slug: string): string | null {
+  const mdPath = path.join(postsDirectory, `${slug}.md`);
+  const mdxPath = path.join(postsDirectory, `${slug}.mdx`);
+
+  if (fs.existsSync(mdPath)) {
+    return mdPath;
+  }
+
+  if (fs.existsSync(mdxPath)) {
+    return mdxPath;
+  }
+
+  return null;
+}
+
+export function getAllPosts(): Post[] {
+  const fileNames = fs
+    .readdirSync(postsDirectory)
+    .filter(
+      (fileName) =>
+        fileName.endsWith(".md") || fileName.endsWith(".mdx")
+    );
+
   const posts = fileNames.map((fileName) => {
-    const slug = fileName.replace(/\.mdx$/, '');
+    const slug = fileName.replace(/\.mdx?$/, "");
     const fullPath = path.join(postsDirectory, fileName);
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
+    const fileContents = fs.readFileSync(fullPath, "utf8");
     const { data, content } = matter(fileContents);
 
     return {
       slug,
-      title: data.title,
-      date: data.date,
-      category: data.category,
-      image: data.image,
+      title: data.title ?? "Chưa có tiêu đề",
+      date: data.date ?? "",
+      category: data.category ?? "",
+      image: data.image ?? "",
       content,
     };
   });
 
-  return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  return posts.sort(
+    (a, b) =>
+      new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
 }
 
-export function getPostBySlug(slug: string) {
-  const fullPath = path.join(postsDirectory, `${slug}.mdx`);
-  const fileContents = fs.readFileSync(fullPath, 'utf8');
+export function getPostBySlug(slug: string): Post | null {
+  const fullPath = getPostFilePath(slug);
+
+  if (!fullPath) {
+    return null;
+  }
+
+  const fileContents = fs.readFileSync(fullPath, "utf8");
   const { data, content } = matter(fileContents);
 
   return {
     slug,
-    title: data.title,
-    date: data.date,
-    category: data.category,
-    image: data.image,
+    title: data.title ?? "Chưa có tiêu đề",
+    date: data.date ?? "",
+    category: data.category ?? "",
+    image: data.image ?? "",
     content,
   };
 }

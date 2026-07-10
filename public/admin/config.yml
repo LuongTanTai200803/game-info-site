@@ -10,6 +10,8 @@ collections:
     label: "Bài viết"
     folder: "content/posts"
     create: true
+    extension: "mdx"
+    format: "frontmatter"
     slug: "{{slug}}"
 
     fields:

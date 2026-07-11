@@ -39,7 +39,7 @@ export default function PostList({ posts }: PostListProps) {
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-6">Tất cả bài viết</h1>
+      <h1 className="text-4xl font-bold mb-6">Các Trick Lỏ</h1>
 
       <div className="mb-6">
         <div className="w-120 max-w-full">

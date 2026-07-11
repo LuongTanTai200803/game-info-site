@@ -1,6 +1,8 @@
 import { getPostBySlug, getAllPosts } from '../../../lib/posts';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export async function generateStaticParams() {
   const posts = getAllPosts();
@@ -43,10 +45,11 @@ export default async function PostPage({
         />
       )}
 
-      <div 
-        className="prose prose-lg max-w-none dark:prose-invert"
-        dangerouslySetInnerHTML={{ __html: post.content }} 
-      />
+      <div className="prose prose-lg max-w-none">
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          {post.content}
+        </ReactMarkdown>
+      </div>
     </article>
   );
 }

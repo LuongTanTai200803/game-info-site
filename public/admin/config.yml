@@ -4,6 +4,12 @@ backend:
 
 media_folder: "public/uploads"
 public_folder: "/uploads"
+media_library:
+  name: cloudinary
+  config:
+    cloud_name: ...
+    api_key: ...
+
 
 collections:
   - name: "posts"

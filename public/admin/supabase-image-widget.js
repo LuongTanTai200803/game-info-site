@@ -1,48 +1,36 @@
-(function () {
-  const SUPABASE_URL = "https://vvhyysizqdlmmsfxzled.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2aHl5c2l6cWRsbW1zZnh6bGVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2OTcyNzQsImV4cCI6MjA5OTI3MzI3NH0.23oj2ohpLyGlVsUwooqmrTrFx7zXHpr8zFfNzGxAUb0";
-  const BUCKET_NAME = "game-images";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-  const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
+(function () {
+  const client = createClient(
+    window.SUPABASE_URL,
+    window.SUPABASE_ANON_KEY
   );
 
   function SupabaseImageControl(props) {
     const React = window.React;
     const [uploading, setUploading] = React.useState(false);
-    const [errorMessage, setErrorMessage] = React.useState("");
-
-    const value = props.value || "";
+    const [error, setError] = React.useState("");
 
     async function handleUpload(event) {
       const file = event.target.files?.[0];
 
-      if (!file) {
-        return;
-      }
-
-      setErrorMessage("");
-
-      if (!file.type.startsWith("image/")) {
-        setErrorMessage("Chỉ được upload file ảnh.");
-        return;
-      }
-
-      if (file.size > 5 * 1024 * 1024) {
-        setErrorMessage("Ảnh không được lớn hơn 5 MB.");
-        return;
-      }
+      if (!file) return;
 
       setUploading(true);
+      setError("");
 
       try {
-        const extension = file.name.split(".").pop() || "jpg";
-        const safeName = crypto.randomUUID();
-        const filePath = `posts/${Date.now()}-${safeName}.${extension}`;
+        if (!file.type.startsWith("image/")) {
+          throw new Error("Chỉ được chọn file ảnh");
+        }
 
-        const { error: uploadError } = await supabaseClient.storage
-          .from(BUCKET_NAME)
+        const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
+
+        const filePath =
+          `posts/${Date.now()}-${crypto.randomUUID()}.${extension}`;
+
+        const { error: uploadError } = await client.storage
+          .from(window.SUPABASE_BUCKET)
           .upload(filePath, file, {
             cacheControl: "3600",
             upsert: false,
@@ -53,42 +41,27 @@
           throw uploadError;
         }
 
-        const { data } = supabaseClient.storage
-          .from(BUCKET_NAME)
+        const { data } = client.storage
+          .from(window.SUPABASE_BUCKET)
           .getPublicUrl(filePath);
 
         if (!data?.publicUrl) {
-          throw new Error("Không lấy được URL ảnh.");
+          throw new Error("Không lấy được URL ảnh");
         }
 
         props.onChange(data.publicUrl);
-      } catch (error) {
-        console.error(error);
-
-        setErrorMessage(
-          error instanceof Error
-            ? error.message
-            : "Upload ảnh thất bại."
-        );
+      } catch (err) {
+        console.error(err);
+        setError(err instanceof Error ? err.message : "Upload thất bại");
       } finally {
         setUploading(false);
         event.target.value = "";
       }
     }
 
-    function handleRemove() {
-      props.onChange("");
-    }
-
     return React.createElement(
       "div",
-      {
-        style: {
-          display: "flex",
-          flexDirection: "column",
-          gap: "12px",
-        },
-      },
+      null,
 
       React.createElement("input", {
         type: "file",
@@ -98,76 +71,42 @@
       }),
 
       uploading
-        ? React.createElement("p", null, "Đang upload ảnh...")
+        ? React.createElement("p", null, "Đang upload...")
         : null,
 
-      errorMessage
+      error
         ? React.createElement(
             "p",
-            {
-              style: {
-                color: "red",
-              },
-            },
-            errorMessage
+            { style: { color: "red" } },
+            error
           )
         : null,
 
-      value
-        ? React.createElement(
-            React.Fragment,
-            null,
-
-            React.createElement("img", {
-              src: value,
-              alt: "Ảnh đã upload",
-              style: {
-                width: "100%",
-                maxWidth: "400px",
-                height: "220px",
-                objectFit: "cover",
-                borderRadius: "8px",
-              },
-            }),
-
-            React.createElement(
-              "a",
-              {
-                href: value,
-                target: "_blank",
-                rel: "noreferrer",
-              },
-              "Mở ảnh"
-            ),
-
-            React.createElement(
-              "button",
-              {
-                type: "button",
-                onClick: handleRemove,
-                style: {
-                  width: "fit-content",
-                  padding: "8px 12px",
-                  cursor: "pointer",
-                },
-              },
-              "Xóa ảnh khỏi bài viết"
-            )
-          )
+      props.value
+        ? React.createElement("img", {
+            src: props.value,
+            alt: "Ảnh đã upload",
+            style: {
+              display: "block",
+              width: "100%",
+              maxWidth: "400px",
+              height: "220px",
+              objectFit: "cover",
+              marginTop: "12px",
+              borderRadius: "8px",
+            },
+          })
         : null
     );
   }
 
   function SupabaseImagePreview(props) {
-    const React = window.React;
-    const value = props.value;
-
-    if (!value) {
-      return React.createElement("p", null, "Chưa có ảnh");
+    if (!props.value) {
+      return window.React.createElement("p", null, "Chưa có ảnh");
     }
 
-    return React.createElement("img", {
-      src: value,
+    return window.React.createElement("img", {
+      src: props.value,
       alt: "Preview",
       style: {
         maxWidth: "100%",

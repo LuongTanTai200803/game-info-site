@@ -2,12 +2,6 @@ backend:
   name: git-gateway
   branch: main
 
-media_library:
-  name: cloudinary
-  config:
-    cloud_name: "cjd5et2o"
-    api_key: "883771568633784"
-    folder: "game-info-site/posts"
 
 collections:
   - name: "posts"

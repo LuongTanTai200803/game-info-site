@@ -38,18 +38,18 @@ export default function PostList({ posts }: PostListProps) {
   }, [posts, keyword, selectedCategory]);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
+    <div className="w-full max-w-6xl mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-6">Tất cả bài viết</h1>
 
-      <div className="w-full mb-6">
-        <div className="w-full max-w-xl">
-            <input
+      <div className="mb-6">
+        <div className="w-120 max-w-full">
+          <input
             type="search"
             placeholder="Tìm bài viết..."
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             className="block w-full border rounded-lg px-4 py-3"
-            />
+          />
         </div>
       </div>
 

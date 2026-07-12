@@ -1,6 +1,13 @@
 [build]
-  command = "npm run build"
-  publish = ".next"
+  # Tắt build hoàn toàn
+  command = "echo 'Build skipped - Site is hosted on Vercel'"
+  publish = "public"
+  ignore = "true"          # Dòng này quan trọng
 
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
+# Tắt build cho production
+[context.production]
+  command = "echo 'No build needed on Netlify'"
+
+# Tắt build cho preview
+[context.deploy-preview]
+  command = "echo 'No preview build needed'"

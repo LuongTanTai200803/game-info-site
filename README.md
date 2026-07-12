@@ -333,3 +333,18 @@ Website cập nhật
 - Dữ liệu lưu bằng Git
 - Ảnh lưu riêng trên Storage
 - Website tách biệt hoàn toàn khỏi CMS
+
+---
+```
+Next.js
+│
+├── React Components
+├── ReactMarkdown (Plugin)
+├── remark-gfm (Plugin)
+├── Decap CMS (Framework)
+│      └── supabase-image (Custom Widget)
+├── Supabase SDK
+├── Netlify Identity (Authentication Provider)
+├── Git Gateway (Adapter)
+└── Vercel (Deployment Platform)
+```

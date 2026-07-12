@@ -46,9 +46,20 @@ export default async function PostPage({
       )}
 
       <div className="prose prose-lg max-w-none">
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-          {post.content}
-        </ReactMarkdown>
+        <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{
+          img: ({ src, alt }) => (
+            <img
+              src={src ?? ""}
+              alt={alt ?? ""}
+              className="block max-w-full h-auto mx-auto my-8 rounded-lg"
+            />
+          ),
+        }}
+      >
+        {post.content}
+      </ReactMarkdown>
       </div>
     </article>
   );
